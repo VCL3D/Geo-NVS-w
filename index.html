@@ -50,7 +50,12 @@
     .grid{display:grid; gap:18px}
     .grid.cols-2{grid-template-columns:repeat(2, minmax(0,1fr))}
     .grid.cols-3{grid-template-columns:repeat(3, minmax(0,1fr))}
-    @media (max-width: 900px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr}}
+    /* New 60/40 layout for results */
+    .grid.cols-2-60-40{grid-template-columns:3fr 2fr}
+    @media (max-width: 900px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+      .grid.cols-2-60-40{grid-template-columns:1fr}
+    }
 
     figure{margin:0}
     figure img{width:100%; height:auto; border-radius:12px; border:1px solid #e6edf6; background:#fff}
@@ -72,8 +77,7 @@
     .muted{color:var(--muted)}
     .chips{display:flex; gap:8px; flex-wrap:wrap}
 
-    /* Qualitative thumbs: make them larger */
-    .thumb-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px}
+    .thumb-grid{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:6px}
     @media (max-width: 700px){.thumb-grid{grid-template-columns:repeat(2, minmax(0,1fr))}}
     .thumb-grid img{border-radius:8px; border:1px solid #e6edf6}
 
@@ -83,6 +87,9 @@
     /* labels overlay for (a)(b)(c)(d) */
     .labeled{position:relative}
     .label{position:absolute; top:8px; left:10px; background:rgba(0,0,0,.72); color:#fff; font-size:12px; padding:2px 6px; border-radius:6px}
+
+    /* Right column vertical stacking spacing */
+    .right-col > * + *{margin-top:18px}
   </style>
 </head>
 <body>
@@ -186,7 +193,7 @@
           </p>
           <p class="mono">
             \[\mathcal{L}_{\mathrm{GPL}} = \mathbb{E}_{\mathbf{r}}\,[\, M(\mathbf{r}) \
-            \cdot \sigma(\, \lambda_{\text{grad}} E_{\text{grad}}(\mathbf{r}) + \lambda_{\text{curv}} E_{\text{curv}}(\mathbf{r})\,)\,] \,\]
+            \cdot \sigma(\, \lambda_{\text{grad}} E_{\text{grad}}(\mathbf{r}) + \lambda_{\text{curv}} E_{\text{curv}}(\mathbf{r})\,)\,]\,\]
           </p>
           <p>
             where \(M(\mathbf{r})\in[0,1]\) is the predicted mask; \(E_{\text{grad}}=(\lVert \nabla s\rVert-1)^2\) and \(E_{\text{curv}}=|\Delta s|\) are ray‑wise averages; \(\sigma\) is a calibrated sigmoid. We use \(\lambda_{\mathrm{GPL}}=0.05\), \(\lambda_{\text{grad}}=10.0\), \(\lambda_{\text{curv}}=2.0\).
@@ -212,117 +219,123 @@
       <h2>Experiments</h2>
       <p class="muted">Datasets: IMC‑Phototourism (Brandenburg Gate, Sacré‑Cœur, Trevi Fountain, Taj Mahal). Implementation: PyTorch on a single NVIDIA A10G with mixed precision. We log GPU power over time to report energy.</p>
 
-      <!-- Energy figure moved above quantitative results -->
-      <figure style="margin-bottom:18px">
-        <img src="energy_vs_psnr.png" alt="Energy vs. PSNR plot comparing methods"/>
-        <figcaption><strong>Figure 2.</strong> Energy vs. quality for 300k iterations. Geo‑NVS‑w achieves high PSNR with substantially less training energy than NeRF‑W / Ha‑NeRF.</figcaption>
-      </figure>
+      <!-- NEW 60/40 LAYOUT -->
+      <div class="grid cols-2-60-40">
+        <!-- LEFT: 60% width — Qualitative grid -->
+        <div>
+          <figure>
+            <div class="thumb-grid">
+              <!-- Trevi (current) -->
+              <div class="labeled"><span class="label">(a)</span><img src="split_trevi/split_0.png" alt="Trevi input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="split_trevi/split_1.png" alt="Trevi ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="split_trevi/split_2.png" alt="Trevi transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="split_trevi/split_3.png" alt="Trevi GPL map"/></div>
 
-      <!-- Qualitative results made larger (full-width + larger thumbs) -->
-      <figure>
-        <div class="thumb-grid">
-          <!-- Trevi (current) -->
-          <div class="labeled"><span class="label">(a)</span><img src="split_trevi/split_0.png" alt="Trevi input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="split_trevi/split_1.png" alt="Trevi ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="split_trevi/split_2.png" alt="Trevi transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="split_trevi/split_3.png" alt="Trevi GPL map"/></div>
+              <!-- Sacré-Cœur (current) -->
+              <div class="labeled"><span class="label">(a)</span><img src="split_sacre/split_0.png" alt="Sacré-Cœur input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="split_sacre/split_1.png" alt="Sacré-Cœur ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="split_sacre/split_2.png" alt="Sacré-Cœur transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="split_sacre/split_3.png" alt="Sacré-Cœur GPL map"/></div>
 
-          <!-- Sacré-Cœur (current) -->
-          <div class="labeled"><span class="label">(a)</span><img src="split_sacre/split_0.png" alt="Sacré-Cœur input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="split_sacre/split_1.png" alt="Sacré-Cœur ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="split_sacre/split_2.png" alt="Sacré-Cœur transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="split_sacre/split_3.png" alt="Sacré-Cœur GPL map"/></div>
+              <!-- Trevi (old set) -->
+              <div class="labeled"><span class="label">(a)</span><img src="split_trevi_old/split_0.png" alt="Trevi (old) input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="split_trevi_old/split_1.png" alt="Trevi (old) ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="split_trevi_old/split_2.png" alt="Trevi (old) transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="split_trevi_old/split_3.png" alt="Trevi (old) GPL map"/></div>
 
-          <!-- Trevi (old set) -->
-          <div class="labeled"><span class="label">(a)</span><img src="split_trevi_old/split_0.png" alt="Trevi (old) input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="split_trevi_old/split_1.png" alt="Trevi (old) ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="split_trevi_old/split_2.png" alt="Trevi (old) transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="split_trevi_old/split_3.png" alt="Trevi (old) GPL map"/></div>
+              <!-- Brandenburg Gate -->
+              <div class="labeled"><span class="label">(a)</span><img src="split_brandenburg/split_0.png" alt="Brandenburg input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="split_brandenburg/split_1.png" alt="Brandenburg ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="split_brandenburg/split_2.png" alt="Brandenburg transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="split_brandenburg/split_3.png" alt="Brandenburg GPL map"/></div>
 
-          <!-- Brandenburg Gate -->
-          <div class="labeled"><span class="label">(a)</span><img src="split_brandenburg/split_0.png" alt="Brandenburg input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="split_brandenburg/split_1.png" alt="Brandenburg ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="split_brandenburg/split_2.png" alt="Brandenburg transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="split_brandenburg/split_3.png" alt="Brandenburg GPL map"/></div>
+              <!-- Sacré-Cœur extra #2 -->
+              <div class="labeled"><span class="label">(a)</span><img src="extra_splits/sacre_2/split_0.png" alt="Sacré-Cœur extra 2 input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="extra_splits/sacre_2/split_1.png" alt="Sacré-Cœur extra 2 ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="extra_splits/sacre_2/split_2.png" alt="Sacré-Cœur extra 2 transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="extra_splits/sacre_2/split_3.png" alt="Sacré-Cœur extra 2 GPL map"/></div>
 
-          <!-- Sacré-Cœur extra #2 -->
-          <div class="labeled"><span class="label">(a)</span><img src="extra_splits/sacre_2/split_0.png" alt="Sacré-Cœur extra 2 input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="extra_splits/sacre_2/split_1.png" alt="Sacré-Cœur extra 2 ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="extra_splits/sacre_2/split_2.png" alt="Sacré-Cœur extra 2 transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="extra_splits/sacre_2/split_3.png" alt="Sacré-Cœur extra 2 GPL map"/></div>
+              <!-- Trevi extra #2 -->
+              <div class="labeled"><span class="label">(a)</span><img src="extra_splits/trevi_2/split_0.png" alt="Trevi extra 2 input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="extra_splits/trevi_2/split_1.png" alt="Trevi extra 2 ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="extra_splits/trevi_2/split_2.png" alt="Trevi extra 2 transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="extra_splits/trevi_2/split_3.png" alt="Trevi extra 2 GPL map"/></div>
 
-          <!-- Trevi extra #2 -->
-          <div class="labeled"><span class="label">(a)</span><img src="extra_splits/trevi_2/split_0.png" alt="Trevi extra 2 input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="extra_splits/trevi_2/split_1.png" alt="Trevi extra 2 ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="extra_splits/trevi_2/split_2.png" alt="Trevi extra 2 transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="extra_splits/trevi_2/split_3.png" alt="Trevi extra 2 GPL map"/></div>
+              <!-- Trevi extra #3 -->
+              <div class="labeled"><span class="label">(a)</span><img src="extra_splits/trevi_3/split_0.png" alt="Trevi extra 3 input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="extra_splits/trevi_3/split_1.png" alt="Trevi extra 3 ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="extra_splits/trevi_3/split_2.png" alt="Trevi extra 3 transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="extra_splits/trevi_3/split_3.png" alt="Trevi extra 3 GPL map"/></div>
 
-          <!-- Trevi extra #3 -->
-          <div class="labeled"><span class="label">(a)</span><img src="extra_splits/trevi_3/split_0.png" alt="Trevi extra 3 input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="extra_splits/trevi_3/split_1.png" alt="Trevi extra 3 ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="extra_splits/trevi_3/split_2.png" alt="Trevi extra 3 transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="extra_splits/trevi_3/split_3.png" alt="Trevi extra 3 GPL map"/></div>
+              <!-- Brandenburg extra #3 -->
+              <div class="labeled"><span class="label">(a)</span><img src="extra_splits/brandenburg_3/split_0.png" alt="Brandenburg extra 3 input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="extra_splits/brandenburg_3/split_1.png" alt="Brandenburg extra 3 ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="extra_splits/brandenburg_3/split_2.png" alt="Brandenburg extra 3 transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="extra_splits/brandenburg_3/split_3.png" alt="Brandenburg extra 3 GPL map"/></div>
 
-          <!-- Brandenburg extra #3 -->
-          <div class="labeled"><span class="label">(a)</span><img src="extra_splits/brandenburg_3/split_0.png" alt="Brandenburg extra 3 input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="extra_splits/brandenburg_3/split_1.png" alt="Brandenburg extra 3 ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="extra_splits/brandenburg_3/split_2.png" alt="Brandenburg extra 3 transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="extra_splits/brandenburg_3/split_3.png" alt="Brandenburg extra 3 GPL map"/></div>
+              <!-- Brandenburg extra #2 -->
+              <div class="labeled"><span class="label">(a)</span><img src="extra_splits/brandenburg_2/split_0.png" alt="Brandenburg extra 2 input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="extra_splits/brandenburg_2/split_1.png" alt="Brandenburg extra 2 ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="extra_splits/brandenburg_2/split_2.png" alt="Brandenburg extra 2 transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="extra_splits/brandenburg_2/split_3.png" alt="Brandenburg extra 2 GPL map"/></div>
 
-          <!-- Brandenburg extra #2 -->
-          <div class="labeled"><span class="label">(a)</span><img src="extra_splits/brandenburg_2/split_0.png" alt="Brandenburg extra 2 input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="extra_splits/brandenburg_2/split_1.png" alt="Brandenburg extra 2 ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="extra_splits/brandenburg_2/split_2.png" alt="Brandenburg extra 2 transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="extra_splits/brandenburg_2/split_3.png" alt="Brandenburg extra 2 GPL map"/></div>
+              <!-- Sacré-Cœur extra #3 -->
+              <div class="labeled"><span class="label">(a)</span><img src="extra_splits/sacre_3/split_0.png" alt="Sacré-Cœur extra 3 input"/></div>
+              <div class="labeled"><span class="label">(b)</span><img src="extra_splits/sacre_3/split_1.png" alt="Sacré-Cœur extra 3 ours"/></div>
+              <div class="labeled"><span class="label">(c)</span><img src="extra_splits/sacre_3/split_2.png" alt="Sacré-Cœur extra 3 transient mask"/></div>
+              <div class="labeled"><span class="label">(d)</span><img src="extra_splits/sacre_3/split_3.png" alt="Sacré-Cœur extra 3 GPL map"/></div>
+            </div>
 
-          <!-- Sacré-Cœur extra #3 -->
-          <div class="labeled"><span class="label">(a)</span><img src="extra_splits/sacre_3/split_0.png" alt="Sacré-Cœur extra 3 input"/></div>
-          <div class="labeled"><span class="label">(b)</span><img src="extra_splits/sacre_3/split_1.png" alt="Sacré-Cœur extra 3 ours"/></div>
-          <div class="labeled"><span class="label">(c)</span><img src="extra_splits/sacre_3/split_2.png" alt="Sacré-Cœur extra 3 transient mask"/></div>
-          <div class="labeled"><span class="label">(d)</span><img src="extra_splits/sacre_3/split_3.png" alt="Sacré-Cœur extra 3 GPL map"/></div>
+            <figcaption><strong>Figure 3.</strong> Qualitative results across multiple scenes (Trevi, Sacré-Cœur, Brandenburg Gate). Each group shows: (a) Input; (b) Ours; (c) Transient mask; (d) GPL map.</figcaption>
+          </figure>
         </div>
 
-        <figcaption><strong>Figure 3.</strong> Qualitative results across multiple scenes (Trevi, Sacré-Cœur, Brandenburg Gate). Each group shows: (a) Input; (b) Ours; (c) Transient mask; (d) GPL map.</figcaption>
-      </figure>
+        <!-- RIGHT: 40% width — Energy diagram over quantitative table -->
+        <div class="right-col">
+          <figure>
+            <img src="energy_vs_psnr.png" alt="Energy vs. PSNR plot comparing methods"/>
+            <figcaption><strong>Figure 2.</strong> Energy vs. quality for 300k iterations. Geo‑NVS‑w achieves high PSNR with substantially less training energy than NeRF‑W / Ha‑NeRF.</figcaption>
+          </figure>
 
-      <!-- Quantitative results table now sits below energy figure -->
-      <div class="card" style="margin-top:18px">
-        <h3 class="mono" style="margin-top:0">Novel View Synthesis (NVS) quality</h3>
-        <div style="overflow:auto">
-          <table aria-label="NVS quantitative results">
-            <thead>
-              <tr>
-                <th>Scene</th>
-                <th>Method</th>
-                <th>PSNR ↑</th>
-                <th>SSIM ↑</th>
-                <th>LPIPS ↓</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td rowspan="3">Brandenburg Gate</td><td>Ha‑NeRF</td><td>20.04</td><td>0.887</td><td><strong>0.139</strong></td></tr>
-              <tr><td>NeRF‑W</td><td>23.45</td><td>0.811</td><td>0.247</td></tr>
-              <tr><td><strong>Ours</strong></td><td><strong>25.4</strong></td><td><strong>0.944</strong></td><td>0.158</td></tr>
+          <div class="card">
+            <h3 class="mono" style="margin-top:0">Novel View Synthesis (NVS) quality</h3>
+            <div style="overflow:auto">
+              <table aria-label="NVS quantitative results">
+                <thead>
+                  <tr>
+                    <th>Scene</th>
+                    <th>Method</th>
+                    <th>PSNR ↑</th>
+                    <th>SSIM ↑</th>
+                    <th>LPIPS ↓</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td rowspan="3">Brandenburg Gate</td><td>Ha‑NeRF</td><td>20.04</td><td>0.887</td><td><strong>0.139</strong></td></tr>
+                  <tr><td>NeRF‑W</td><td>23.45</td><td>0.811</td><td>0.247</td></tr>
+                  <tr><td><strong>Ours</strong></td><td><strong>25.4</strong></td><td><strong>0.944</strong></td><td>0.158</td></tr>
 
-              <tr><td rowspan="3">Sacré‑Cœur</td><td>Ha‑NeRF</td><td>20.02</td><td>0.801</td><td>0.171</td></tr>
-              <tr><td><strong>NeRF‑W</strong></td><td><strong>25.40</strong></td><td><strong>0.877</strong></td><td><strong>0.124</strong></td></tr>
-              <tr><td>Ours</td><td>23.23</td><td>0.850</td><td>0.160</td></tr>
+                  <tr><td rowspan="3">Sacré‑Cœur</td><td>Ha‑NeRF</td><td>20.02</td><td>0.801</td><td>0.171</td></tr>
+                  <tr><td><strong>NeRF‑W</strong></td><td><strong>25.40</strong></td><td><strong>0.877</strong></td><td><strong>0.124</strong></td></tr>
+                  <tr><td>Ours</td><td>23.23</td><td>0.850</td><td>0.160</td></tr>
 
-              <tr><td rowspan="3">Trevi Fountain</td><td>Ha‑NeRF</td><td>20.18</td><td>0.691</td><td>0.223</td></tr>
-              <tr><td>NeRF‑W</td><td>22.15</td><td>0.695</td><td><strong>0.117</strong></td></tr>
-              <tr><td><strong>Ours</strong></td><td><strong>24.5</strong></td><td><strong>0.831</strong></td><td>0.203</td></tr>
+                  <tr><td rowspan="3">Trevi Fountain</td><td>Ha‑NeRF</td><td>20.18</td><td>0.691</td><td>0.223</td></tr>
+                  <tr><td>NeRF‑W</td><td>22.15</td><td>0.695</td><td><strong>0.117</strong></td></tr>
+                  <tr><td><strong>Ours</strong></td><td><strong>24.5</strong></td><td><strong>0.831</strong></td><td>0.203</td></tr>
 
-              <tr><td rowspan="3">Taj Mahal</td><td>Ha‑NeRF</td><td>20.84</td><td>0.826</td><td>0.249</td></tr>
-              <tr><td>NeRF‑W</td><td>22.72</td><td>0.767</td><td>0.301</td></tr>
-              <tr><td><strong>Ours</strong></td><td><strong>24.19</strong></td><td><strong>0.860</strong></td><td><strong>0.194</strong></td></tr>
+                  <tr><td rowspan="3">Taj Mahal</td><td>Ha‑NeRF</td><td>20.84</td><td>0.826</td><td>0.249</td></tr>
+                  <tr><td>NeRF‑W</td><td>22.72</td><td>0.767</td><td>0.301</td></tr>
+                  <tr><td><strong>Ours</strong></td><td><strong>24.19</strong></td><td><strong>0.860</strong></td><td><strong>0.194</strong></td></tr>
 
-              <tr><td rowspan="3"><em>Average</em></td><td>Ha‑NeRF</td><td>20.27</td><td>0.801</td><td>0.195</td></tr>
-              <tr><td>NeRF‑W</td><td>23.43</td><td>0.787</td><td>0.197</td></tr>
-              <tr><td><strong>Ours</strong></td><td><strong>24.33</strong></td><td><strong>0.871</strong></td><td><strong>0.179</strong></td></tr>
-            </tbody>
-          </table>
+                  <tr><td rowspan="3"><em>Average</em></td><td>Ha‑NeRF</td><td>20.27</td><td>0.801</td><td>0.195</td></tr>
+                  <tr><td>NeRF‑W</td><td>23.43</td><td>0.787</td><td>0.197</td></tr>
+                  <tr><td><strong>Ours</strong></td><td><strong>24.33</strong></td><td><strong>0.871</strong></td><td><strong>0.179</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="small muted" style="margin-top:8px">Metrics computed on the four IMC‑PT scenes used by NeRF‑W / Ha‑NeRF.</p>
+          </div>
         </div>
-        <p class="small muted" style="margin-top:8px">Metrics computed on the four IMC‑PT scenes used by NeRF‑W / Ha‑NeRF.</p>
       </div>
 
       <div class="card" style="margin-top:18px">
