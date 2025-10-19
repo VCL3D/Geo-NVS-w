@@ -1,1 +1,360 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geo-NVS-w: Geometry-Aware Novel View Synthesis In-the-Wild with an SDF Renderer</title>
+  <meta name="description" content="Project page for Geo-NVS-w: Geometry-Aware Novel View Synthesis In-the-Wild with an SDF Renderer" />
+  <link rel="icon" href="data:,">
+  <!-- MathJax for equations -->
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root{
+      --ink:#0d1b2a; /* dark text */
+      --muted:#4f5d75; /* muted */
+      --bg:#ffffff; /* page */
+      --card:#f6f8fb; /* light card */
+      --ink-inv:#ffffff;
+      --accent:#0066bb; /* close to IEEE blue */
+      --accent-2:#0081ff;
+      --maxw:1080px;
+      --radius:16px;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+    }
+    html{scroll-behavior:smooth}
+    body{margin:0; font:16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; color:var(--ink); background:var(--bg)}
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw); margin:0 auto; padding:0 20px}
+    header.hero{padding:64px 0 24px; background:linear-gradient(180deg, #eaf3ff 0%, #ffffff 60%)}
+    .title{font-weight:800; letter-spacing:-.02em; line-height:1.15; font-size:clamp(28px, 4vw, 44px); margin:0 0 8px}
+    .subtitle{margin:0 0 18px; color:var(--muted)}
+    .authors{margin:6px 0 18px; color:#2a2a2a}
+    .affil{color:var(--muted)}
+    .pillbar{display:flex; flex-wrap:wrap; gap:10px; margin:18px 0 0}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:var(--card); border:1px solid #e5ecf5}
+    .cta{display:inline-block; background:var(--accent); color:var(--ink-inv); padding:12px 16px; border-radius:999px; text-decoration:none; box-shadow:var(--shadow)}
+    .cta.secondary{background:#0b3a66}
+
+    nav.top{position:sticky; top:0; z-index:40; backdrop-filter:saturate(180%) blur(8px); background:rgba(255,255,255,.8); border-bottom:1px solid #e9eef5}
+    nav.top .container{display:flex; gap:20px; align-items:center; height:56px}
+    nav a{font-weight:600; color:#133e6f}
+    nav .spacer{flex:1}
+
+    .section{padding:40px 0}
+    .card{background:var(--card); border:1px solid #e8eef7; border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
+    h2{font-size:clamp(22px, 2.6vw, 32px); margin:0 0 12px}
+    h3{font-size:20px; margin:18px 0 8px}
+    p{margin:10px 0}
+    ul{margin:8px 0 8px 18px}
+    .grid{display:grid; gap:18px}
+    .grid.cols-2{grid-template-columns:repeat(2, minmax(0,1fr))}
+    .grid.cols-3{grid-template-columns:repeat(3, minmax(0,1fr))}
+    @media (max-width: 900px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr}}
+
+    figure{margin:0}
+    figure img{width:100%; height:auto; border-radius:12px; border:1px solid #e6edf6; background:#fff}
+    figcaption{font-size:14px; color:var(--muted); margin-top:8px}
+
+    .kpi{display:flex; gap:16px; flex-wrap:wrap}
+    .kpi .box{flex:1 1 200px; background:#0f315a; color:#fff; padding:16px; border-radius:12px}
+    .kpi .box strong{display:block; font-size:28px; line-height:1.2}
+
+    table{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums}
+    th, td{padding:10px 10px; border-bottom:1px solid #e8eef6; text-align:left}
+    thead th{background:#ebf3ff; position:sticky; top:56px}
+    tbody tr:hover{background:#f8fbff}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .tag{display:inline-block; padding:4px 10px; border:1px solid #e0e8f2; background:#f5f9ff; color:#2a5b8a; border-radius:999px; font-size:12px}
+
+    footer{padding:40px 0; color:var(--muted); border-top:1px solid #e9eef5}
+    .small{font-size:14px}
+    .muted{color:var(--muted)}
+    .chips{display:flex; gap:8px; flex-wrap:wrap}
+
+    .thumb-grid{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:6px}
+    @media (max-width: 700px){.thumb-grid{grid-template-columns:repeat(2, minmax(0,1fr))}}
+    .thumb-grid img{border-radius:8px; border:1px solid #e6edf6}
+
+    .toc{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px}
+    .toc a{background:#f6f9ff; border:1px solid #e6edf7; padding:8px 10px; border-radius:8px}
+
+    /* labels overlay for (a)(b)(c)(d) */
+    .labeled{position:relative}
+    .label{position:absolute; top:8px; left:10px; background:rgba(0,0,0,.72); color:#fff; font-size:12px; padding:2px 6px; border-radius:6px}
+  </style>
+</head>
+<body>
+  <nav class="top">
+    <div class="container">
+      <a href="#top" style="font-weight:800">Geo‑NVS‑w</a>
+      <a href="#abstract">Abstract</a>
+      <a href="#overview">Overview</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#conclusion">Conclusion</a>
+      <a href="#references">References</a>
+      <span class="spacer"></span>
+      <a class="cta" href="#code" onclick="document.getElementById('code').scrollIntoView({behavior:'smooth'}); return false;">Get the Files</a>
+    </div>
+  </nav>
+
+  <header id="top" class="hero">
+    <div class="container">
+      <h1 class="title">Geo‑NVS‑w: Geometry‑Aware Novel View Synthesis In‑the‑Wild with an SDF Renderer</h1>
+      <p class="authors"><strong>Anonymous Authors</strong></p>
+      <p class="affil">Affiliations · City, Country</p>
+      <div class="pillbar">
+        <span class="pill">Keywords: Novel View Synthesis</span>
+        <span class="pill">SDF / NeuS Rendering</span>
+        <span class="pill">In‑the‑Wild Photo Collections</span>
+        <span class="pill">Octree Features</span>
+      </div>
+      <div class="toc">
+        <a href="#abstract">Abstract</a>
+        <a href="#overview">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#results">Experiments</a>
+        <a href="#conclusion">Conclusion</a>
+        <a href="#references">References</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Abstract -->
+    <section id="abstract" class="section">
+      <h2>Abstract</h2>
+      <div class="card">
+        <p>
+          We present <strong>Geo‑NVS‑w</strong>, a geometry‑aware framework for high‑fidelity novel view synthesis (NVS) from unstructured, in‑the‑wild photo collections. In‑the‑wild methods built on volumetric density often blur edges or introduce semi‑transparent artifacts due to geometric ambiguity. Geo‑NVS‑w addresses this by rendering over a <em>Signed Distance Function (SDF)</em> backbone coupled with a <em>sparse octree feature volume</em>.
+        </p>
+        <p>
+          NeuS‑style SDF rendering tightly links color accumulation to the surface, while a new <strong>Geometry‑Preservation Loss (GPL)</strong> discourages transient masks from suppressing geometrically meaningful regions. Across IMC‑Phototourism scenes, Geo‑NVS‑w delivers competitive image quality with sharper details and achieves a <strong>4–5× reduction in energy use</strong> compared to similar methods, making geometry‑centric NVS practical for in‑the‑wild settings.
+        </p>
+        <div class="kpi">
+          <div class="box"><strong>4–5×</strong> lower training energy than in‑the‑wild baselines</div>
+          <div class="box"><strong>Sharper</strong> edges via SDF‑guided compositing</div>
+          <div class="box"><strong>Octree</strong> features focus capacity near geometry</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview figure -->
+    <section id="overview" class="section">
+      <h2>Overview</h2>
+      <div class="grid cols-2">
+        <figure>
+          <img src="overview_diagram.png" alt="Overview diagram of Geo‑NVS‑w pipeline with SDF foreground, background NeRF, and octree feature volumes."/>
+          <figcaption><strong>Figure 1.</strong> Camera rays traverse octree foreground (SDF) and background (NeRF) grids. Inside the unit sphere, interpolated features feed MLPs predicting SDF \(s(\mathbf{x})\) and colors \(c(\mathbf{x},\mathbf{d})\). NeuS rendering converts SDFs to compositing weights, coupling color and geometry; results are blended with the background. A <em>Geometry‑Preservation Loss</em> (GPL) prevents the transient mask from eroding high‑curvature details.</figcaption>
+        </figure>
+        <div class="card">
+          <h3>Contributions</h3>
+          <ul>
+            <li><strong>SDF‑guided NVS with octree features:</strong> An efficient, geometry‑first renderer pairing an SDF foreground with a background NeRF in a sparse octree‑based feature volume.</li>
+            <li><strong>Geometry‑Preservation Loss (GPL):</strong> Penalizes the model for masking out geometrically significant regions as transient, ensuring coherent edges across viewpoints.</li>
+            <li><strong>Measured efficiency:</strong> Single‑GPU implementation with mixed precision and power logging achieves competitive quality and <em>4–5×</em> lower energy than in‑the‑wild baselines.</li>
+          </ul>
+          <div class="chips" style="margin-top:10px">
+            <span class="tag">PyTorch</span>
+            <span class="tag">NeuS‑style Rendering</span>
+            <span class="tag">Octree Grids</span>
+            <span class="tag">IMC‑Phototourism</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Method -->
+    <section id="method" class="section">
+      <h2>Method</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Octree Feature Volume</h3>
+          <p>
+            We represent the scene using two sparse octrees: an SDF‑guided <em>foreground</em> within a unit sphere and a <em>background</em> NeRF. For a 3D point \(\mathbf{x}\in\mathbb{R}^3\) we trilinearly interpolate features from the foreground grid and decode via tiny MLPs into SDF \(s(\mathbf{x})\) and view‑dependent color \(c(\mathbf{x}, \mathbf{d})\). Outside, we query the background grid and pass features to a small background NeRF.
+          </p>
+          <h3>SDF‑Guided Rendering</h3>
+          <p>
+            Following NeuS, SDF samples along each ray are mapped to occupancies via an incidence term proportional to the ray–normal dot product. Alpha compositing yields per‑interval first‑hit probabilities; foreground colors are integrated around the SDF zero level set and composited over a background NeRF. Normals and derivatives use finite differences.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Appearance &amp; Transients</h3>
+          <p>
+            A per‑image latent appearance code models illumination/white‑balance variation. Transient occluders are segmented with a lightweight CGNet trained unsupervisedly, akin to Cross‑Ray supervision.
+          </p>
+          <h3>Geometry‑Preservation Loss (GPL)</h3>
+          <p>
+            Transient masks can mistakenly suppress true structure near edges. We counteract this by penalizing mask activations on rays that pass through geometrically significant regions:
+          </p>
+          <p class="mono">
+            \[\mathcal{L}_{\mathrm{GPL}} = \mathbb{E}_{\mathbf{r}}\,[\, M(\mathbf{r}) \
+            \cdot \sigma(\, \lambda_{\text{grad}} E_{\text{grad}}(\mathbf{r}) + \lambda_{\text{curv}} E_{\text{curv}}(\mathbf{r})\,)\,]\,\]
+          </p>
+          <p>
+            where \(M(\mathbf{r})\in[0,1]\) is the predicted mask; \(E_{\text{grad}}=(\lVert \nabla s\rVert-1)^2\) and \(E_{\text{curv}}=|\Delta s|\) are ray‑wise averages; \(\sigma\) is a calibrated sigmoid. We use \(\lambda_{\mathrm{GPL}}=0.05\), \(\lambda_{\text{grad}}=10.0\), \(\lambda_{\text{curv}}=2.0\).
+          </p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3>Objective</h3>
+        <p>
+          The full objective combines photometric, eikonal, curvature, Lipschitz, geometry preservation, and mask regularization terms:
+        </p>
+        <p class="mono">
+          \[\mathcal{L}= \lambda_{\mathrm{rgb}}\mathcal{L}_{\mathrm{rgb}} + \lambda_{\mathrm{eik}}\mathcal{L}_{\mathrm{eik}} + \lambda_{\mathrm{curv}}\mathcal{L}_{\mathrm{curv}} + \lambda_{\mathrm{mask}}\mathcal{L}_{\mathrm{reg}} + \lambda_{\mathrm{GPL}}\mathcal{L}_{\mathrm{GPL}} + \lambda_{\mathrm{lps}}\mathcal{L}_{\mathrm{lps}}.\]
+        </p>
+        <p>
+          During warm‑up, we additionally use a sphere‑initialization loss \(\mathcal{L}_{\text{sphere}}\).
+        </p>
+      </div>
+    </section>
+
+    <!-- Results / Experiments -->
+    <section id="results" class="section">
+      <h2>Experiments</h2>
+      <p class="muted">Datasets: IMC‑Phototourism (Brandenburg Gate, Sacré‑Cœur, Trevi Fountain, Taj Mahal). Implementation: PyTorch on a single NVIDIA A10G with mixed precision. We log GPU power over time to report energy.</p>
+
+      <div class="grid cols-3">
+        <!-- Column 1: Energy vs PSNR -->
+        <figure>
+          <img src="energy_vs_psnr.png" alt="Energy vs. PSNR plot comparing methods"/>
+          <figcaption><strong>Figure 2.</strong> Energy vs. quality for 300k iterations. Geo‑NVS‑w achieves high PSNR with substantially less training energy than NeRF‑W / Ha‑NeRF.</figcaption>
+        </figure>
+
+        <!-- Column 2: Qualitative grid -->
+        <figure>
+          <div class="thumb-grid">
+            <div class="labeled"><span class="label">(a)</span><img src="split_sacre/split_0.png" alt="Sacré‑Cœur input"/></div>
+            <div class="labeled"><span class="label">(b)</span><img src="split_sacre/split_1.png" alt="Sacré‑Cœur ours"/></div>
+            <div class="labeled"><span class="label">(c)</span><img src="split_sacre/split_2.png" alt="Sacré‑Cœur transiency"/></div>
+            <div class="labeled"><span class="label">(d)</span><img src="split_sacre/split_3.png" alt="Sacré‑Cœur GPL map"/></div>
+
+            <div class="labeled"><span class="label">(a)</span><img src="split_trevi/split_0.png" alt="Trevi input"/></div>
+            <div class="labeled"><span class="label">(b)</span><img src="split_trevi/split_1.png" alt="Trevi ours"/></div>
+            <div class="labeled"><span class="label">(c)</span><img src="split_trevi/split_2.png" alt="Trevi transiency"/></div>
+            <div class="labeled"><span class="label">(d)</span><img src="split_trevi/split_3.png" alt="Trevi GPL map"/></div>
+          </div>
+          <figcaption><strong>Figure 3.</strong> Qualitative results. Top: Sacré‑Cœur; Bottom: Trevi. (a) Input; (b) Ours; (c) Transiency; (d) GPL map.</figcaption>
+        </figure>
+
+        <!-- Column 3: Table -->
+        <div class="card">
+          <h3 class="mono" style="margin-top:0">Novel View Synthesis (NVS) quality</h3>
+          <div style="overflow:auto">
+            <table aria-label="NVS quantitative results">
+              <thead>
+                <tr>
+                  <th>Scene</th>
+                  <th>Method</th>
+                  <th>PSNR ↑</th>
+                  <th>SSIM ↑</th>
+                  <th>LPIPS ↓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td rowspan="3">Brandenburg Gate</td><td>Ha‑NeRF</td><td>20.04</td><td>0.887</td><td><strong>0.139</strong></td></tr>
+                <tr><td>NeRF‑W</td><td>23.45</td><td>0.811</td><td>0.247</td></tr>
+                <tr><td><strong>Ours</strong></td><td><strong>25.4</strong></td><td><strong>0.944</strong></td><td>0.158</td></tr>
+
+                <tr><td rowspan="3">Sacré‑Cœur</td><td>Ha‑NeRF</td><td>20.02</td><td>0.801</td><td>0.171</td></tr>
+                <tr><td><strong>NeRF‑W</strong></td><td><strong>25.40</strong></td><td><strong>0.877</strong></td><td><strong>0.124</strong></td></tr>
+                <tr><td>Ours</td><td>23.23</td><td>0.850</td><td>0.160</td></tr>
+
+                <tr><td rowspan="3">Trevi Fountain</td><td>Ha‑NeRF</td><td>20.18</td><td>0.691</td><td>0.223</td></tr>
+                <tr><td>NeRF‑W</td><td>22.15</td><td>0.695</td><td><strong>0.117</strong></td></tr>
+                <tr><td><strong>Ours</strong></td><td><strong>24.5</strong></td><td><strong>0.831</strong></td><td>0.203</td></tr>
+
+                <tr><td rowspan="3">Taj Mahal</td><td>Ha‑NeRF</td><td>20.84</td><td>0.826</td><td>0.249</td></tr>
+                <tr><td>NeRF‑W</td><td>22.72</td><td>0.767</td><td>0.301</td></tr>
+                <tr><td><strong>Ours</strong></td><td><strong>24.19</strong></td><td><strong>0.860</strong></td><td><strong>0.194</strong></td></tr>
+
+                <tr><td rowspan="3"><em>Average</em></td><td>Ha‑NeRF</td><td>20.27</td><td>0.801</td><td>0.195</td></tr>
+                <tr><td>NeRF‑W</td><td>23.43</td><td>0.787</td><td>0.197</td></tr>
+                <tr><td><strong>Ours</strong></td><td><strong>24.33</strong></td><td><strong>0.871</strong></td><td><strong>0.179</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small muted" style="margin-top:8px">Metrics computed on the four IMC‑PT scenes used by NeRF‑W / Ha‑NeRF.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <p>
+          Beyond quality, Geo‑NVS‑w is markedly efficient: a <span class="mono">300k‑iteration</span> run uses about <strong>2.05&nbsp;kWh</strong>, vs. <strong>9.7&nbsp;kWh</strong> for NeRF‑W and <strong>7.71&nbsp;kWh</strong> for Ha‑NeRF, with smaller MLPs and improved surface coherence.
+        </p>
+      </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section id="conclusion" class="section">
+      <h2>Conclusion</h2>
+      <div class="card">
+        <p>
+          Geo‑NVS‑w advances in‑the‑wild NVS by anchoring rendering to an SDF and protecting geometry via GPL. The result is sharper, more consistent views with substantially lower energy than prior in‑the‑wild systems. Future work will explore integrating <em>3D Gaussian splatting</em> with SDF priors to further cut latency while maintaining surface coherence.
+        </p>
+      </div>
+    </section>
+
+    <!-- Code / Files section -->
+    <section id="code" class="section">
+      <h2>Project Files</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Repository layout</h3>
+          <pre class="mono" style="white-space:pre-wrap; background:#0b1f36; color:#d9e9ff; padding:14px; border-radius:12px; border:1px solid #0e2c52; box-shadow:var(--shadow)">.
+├── index.html                 # <— this page
+├── overview_diagram.png
+├── energy_vs_psnr.png
+├── split_sacre/
+│   ├── split_0.png
+│   ├── split_1.png
+│   ├── split_2.png
+│   └── split_3.png
+├── split_trevi/
+│   ├── split_0.png
+│   ├── split_1.png
+│   ├── split_2.png
+│   └── split_3.png
+├── refs.bib                   # bibliography (as in the LaTeX project)
+└── (optional) paper.pdf       # compiled paper if you include it
+</pre>
+          <p class="small muted">The page assumes the same file structure as the LaTeX project (images and <code>refs.bib</code> in place).</p>
+        </div>
+        <div class="card">
+          <h3>GitHub Pages</h3>
+          <ol>
+            <li>Place <code>index.html</code> at the repository root (alongside the images).</li>
+            <li>Enable <em>GitHub Pages</em> for the repository (Settings → Pages → Deploy from branch).</li>
+            <li>Verify that images load from the relative paths shown above.</li>
+          </ol>
+          <p class="small muted">If you also want a PDF link, add <code>paper.pdf</code> next to this page and link to it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section id="references" class="section">
+      <h2>References</h2>
+      <div class="card">
+        <p>
+          For full citations, see <code>refs.bib</code> from the original LaTeX project (e.g., NeRF <span class="mono">[mildenhall2020nerf]</span>, NeRF‑W <span class="mono">[martin2021nerfw]</span>, Ha‑NeRF <span class="mono">[chen2022ha]</span>, NeuS <span class="mono">[wang2021neus]</span>, PlenOctrees <span class="mono">[yu2021plenoctrees]</span>, NeRF++ <span class="mono">[zhang2020nerfplusplus]</span>, Instant‑NGP <span class="mono">[mueller2022instant]</span>, Neuralangelo <span class="mono">[tancik2023neuralangelo]</span>, CGNet <span class="mono">[wu2021cgnet]</span>, Cross‑Ray <span class="mono">[yang2023crossray]</span>, IMC‑PT <span class="mono">[yi2020imc]</span>, Gaussian Splatting <span class="mono">[kerbl2023gs]</span>, Lipschitz SDF <span class="mono">[liu2022learning]</span>, etc.).
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container">
+    <div class="grid cols-2">
+      <div>
+        <p class="small">© Geo‑NVS‑w Authors.</p>
+      </div>
+      <div style="text-align:right">
+        <a class="small" href="#top">Back to top ↑</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
