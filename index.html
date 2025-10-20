@@ -305,138 +305,136 @@
           </figure>
         </div>
 
-        <!-- RIGHT: 40% width — Energy diagram over quantitative table -->
-        <div class="right-col">
-          <figure>
-            <img src="energy_vs_psnr.png" alt="Energy vs. PSNR plot comparing methods"/>
-            <figcaption><strong>Figure 2.</strong> Energy vs. quality for 300k iterations. Geo‑NVS‑w achieves high PSNR with substantially less training energy than NeRF‑W / Ha‑NeRF.</figcaption>
-          </figure>
-<div style="overflow-x:auto; overflow-y:visible">
-  <table aria-label="NVS quantitative results">…</table>
+<!-- RIGHT: 40% width — Energy diagram over quantitative table -->
+<div class="right-col">
+  <figure>
+    <img src="energy_vs_psnr.png" alt="Energy vs. PSNR plot comparing methods"/>
+    <figcaption><strong>Figure 2.</strong> Energy vs. quality for 300k iterations. Geo-NVS-w achieves high PSNR with substantially less training energy than NeRF-W / Ha-NeRF.</figcaption>
+  </figure>
+
+  <!-- make only horizontal overflow scrollable so sticky works with the page -->
+  <div style="overflow-x:auto; overflow-y:visible">
+    <table aria-label="NVS quantitative results">
+      <thead>
+        <tr>
+          <th>Scene</th>
+          <th>Method</th>
+          <th>PSNR ↑</th>
+          <th>SSIM ↑</th>
+          <th>LPIPS ↓</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Brandenburg Gate -->
+        <tr>
+          <td rowspan="3">Brandenburg Gate</td>
+          <td>Ha-NeRF</td>
+          <td>23.45</td>
+          <td>0.811</td>
+          <td>0.247</td>
+        </tr>
+        <tr>
+          <td>NeRF-W</td>
+          <td>23.98</td>
+          <td>0.915</td>
+          <td>0.198</td>
+        </tr>
+        <tr>
+          <td><strong>Geo-NVS-w (Ours)</strong></td>
+          <td><strong>25.40</strong></td>
+          <td><strong>0.944</strong></td>
+          <td><strong>0.158</strong></td>
+        </tr>
+
+        <!-- Sacré-Cœur -->
+        <tr>
+          <td rowspan="3">Sacré-Cœur</td>
+          <td>Ha-NeRF</td>
+          <td><strong>25.40</strong></td>
+          <td><strong>0.877</strong></td>
+          <td><strong>0.124</strong></td>
+        </tr>
+        <tr>
+          <td>NeRF-W</td>
+          <td>25.11</td>
+          <td>0.859</td>
+          <td>0.141</td>
+        </tr>
+        <tr>
+          <td><strong>Geo-NVS-w (Ours)</strong></td>
+          <td>23.23</td>
+          <td>0.850</td>
+          <td>0.160</td>
+        </tr>
+
+        <!-- Trevi Fountain -->
+        <tr>
+          <td rowspan="3">Trevi Fountain</td>
+          <td>Ha-NeRF</td>
+          <td>22.15</td>
+          <td>0.695</td>
+          <td>0.117</td>
+        </tr>
+        <tr>
+          <td>NeRF-W</td>
+          <td>23.01</td>
+          <td>0.751</td>
+          <td><strong>0.109</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Geo-NVS-w (Ours)</strong></td>
+          <td><strong>24.50</strong></td>
+          <td><strong>0.831</strong></td>
+          <td>0.203</td>
+        </tr>
+
+        <!-- Taj Mahal -->
+        <tr>
+          <td rowspan="3">Taj Mahal</td>
+          <td>Ha-NeRF</td>
+          <td>22.72</td>
+          <td>0.767</td>
+          <td>0.301</td>
+        </tr>
+        <tr>
+          <td>NeRF-W</td>
+          <td><strong>25.15</strong></td>
+          <td>0.833</td>
+          <td>0.195</td>
+        </tr>
+        <tr>
+          <td><strong>Geo-NVS-w (Ours)</strong></td>
+          <td>24.19</td>
+          <td><strong>0.860</strong></td>
+          <td><strong>0.194</strong></td>
+        </tr>
+
+        <!-- Average -->
+        <tr>
+          <td rowspan="3"><em>Average</em></td>
+          <td>Ha-NeRF</td>
+          <td>23.43</td>
+          <td>0.788</td>
+          <td>0.197</td>
+        </tr>
+        <tr>
+          <td>NeRF-W</td>
+          <td>24.31</td>
+          <td>0.840</td>
+          <td><strong>0.161</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Geo-NVS-w (Ours)</strong></td>
+          <td><strong>24.33</strong></td>
+          <td><strong>0.871</strong></td>
+          <td>0.179</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="small muted" style="margin-top:8px">Metrics computed on the four IMC-PT scenes used by NeRF-W / Ha-NeRF.</p>
 </div>
- 
-  <thead>
-    <tr>
-      <th>Scene</th>
-      <th>Method</th>
-      <th>PSNR ↑</th>
-      <th>SSIM ↑</th>
-      <th>LPIPS ↓</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Brandenburg Gate -->
-<tr>
-  <td rowspan="3">Brandenburg Gate</td>
-  <td>Ha-NeRF</td>
-  <td>23.45</td>
-  <td>0.811</td>
-  <td>0.247</td>
-</tr>
-<tr>
-  <td>NeRF-W</td>
-  <td>23.98</td>
-  <td>0.915</td>
-  <td>0.198</td>
-</tr>
-<tr>
-  <td><strong>Geo-NVS-w (Ours)</strong></td>
-  <td><strong>25.40</strong></td>
-  <td><strong>0.944</strong></td>
-  <td><strong>0.158</strong></td>
-</tr>
-
-    <!-- Sacré-Cœur -->
-    <tr>
-      <td rowspan="3">Sacré-Cœur</td>
-      <td>Ha-NeRF</td>
-      <td><strong>25.40</strong></td>
-      <td><strong>0.877</strong></td>
-      <td><strong>0.124</strong></td>
-    </tr>
-    <tr>
-      <td>NeRF-W</td>
-      <td>25.11</td>
-      <td>0.859</td>
-      <td>0.141</td>
-    </tr>
-    <tr>
-      <td><strong>Geo-NVS-w (Ours)</strong></td>
-      <td>23.23</td>
-      <td>0.850</td>
-      <td>0.160</td>
-    </tr>
-
-    <!-- Trevi Fountain -->
-    <tr>
-      <td rowspan="3">Trevi Fountain</td>
-      <td>Ha-NeRF</td>
-      <td>22.15</td>
-      <td>0.695</td>
-      <td>0.117</td>
-    </tr>
-    <tr>
-      <td>NeRF-W</td>
-      <td>23.01</td>
-      <td>0.751</td>
-      <td><strong>0.109</strong></td>
-    </tr>
-    <tr>
-      <td><strong>Geo-NVS-w (Ours)</strong></td>
-      <td><strong>24.50</strong></td>
-      <td><strong>0.831</strong></td>
-      <td>0.203</td>
-    </tr>
-
-    <!-- Taj Mahal -->
-    <tr>
-      <td rowspan="3">Taj Mahal</td>
-      <td>Ha-NeRF</td>
-      <td>22.72</td>
-      <td>0.767</td>
-      <td>0.301</td>
-    </tr>
-    <tr>
-      <td>NeRF-W</td>
-      <td><strong>25.15</strong></td>
-      <td>0.833</td>
-      <td>0.195</td>
-    </tr>
-    <tr>
-      <td><strong>Geo-NVS-w (Ours)</strong></td>
-      <td>24.19</td>
-      <td><strong>0.860</strong></td>
-      <td><strong>0.194</strong></td>
-    </tr>
-
-    <!-- Average -->
-    <tr>
-      <td rowspan="3"><em>Average</em></td>
-      <td>Ha-NeRF</td>
-      <td>23.43</td>
-      <td>0.788</td>
-      <td>0.197</td>
-    </tr>
-    <tr>
-      <td>NeRF-W</td>
-      <td>24.31</td>
-      <td>0.840</td>
-      <td><strong>0.161</strong></td>
-    </tr>
-    <tr>
-      <td><strong>Geo-NVS-w (Ours)</strong></td>
-      <td><strong>24.33</strong></td>
-      <td><strong>0.871</strong></td>
-      <td>0.179</td>
-    </tr>
-  </tbody>
-</table>
-
-            </div>
-            <p class="small muted" style="margin-top:8px">Metrics computed on the four IMC‑PT scenes used by NeRF‑W / Ha‑NeRF.</p>
-          </div>
-        </div>
-      </div>
 
       <div class="card" style="margin-top:18px">
         <p>
