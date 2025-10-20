@@ -68,11 +68,25 @@
     table{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums}
     th, td{padding:10px 10px; border-bottom:1px solid #e8eef6; text-align:left}
 
-    thead th{
+/* Safer for sticky headers across browsers */
+table{
+  width:100%;
+  border-collapse: separate;  /* was: collapse */
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+thead th{
   position: sticky;
-  top: 56px;           /* keep the nav offset */
-  z-index: 1;
-  background:#ebf3ff;
+  top: 0;                     /* stick to top of the table wrapper */
+  z-index: 2;                 /* above cells */
+  background: #ebf3ff;        /* solid background under the sticky */
+}
+
+/* make the wrapper the scroll container */
+.table-wrap{
+  overflow: auto;             /* both axes if needed */
+  max-height: 60vh;           /* optional: keeps it from growing too tall */
 }
     
     tbody tr:hover{background:#f8fbff}
@@ -434,6 +448,7 @@
   </div>
 
   <p class="small muted" style="margin-top:8px">Metrics computed on the four IMC-PT scenes used by NeRF-W / Ha-NeRF.</p>
+</div>
 </div>
 
       <div class="card" style="margin-top:18px">
