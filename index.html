@@ -17,6 +17,7 @@
       --ink-inv:#ffffff;
       --accent:#0066bb; /* close to IEEE blue */
       --accent-2:#0081ff;
+      --nav-h: 56px; /* matches nav.top .container height */
       --maxw:1080px;
       --radius:16px;
       --shadow:0 6px 20px rgba(0,0,0,.08);
@@ -75,14 +76,15 @@ table{
   border-spacing: 0;
   font-variant-numeric: tabular-nums;
 }
+ 
 
+/* replace your thead rule with this */
 thead th{
   position: sticky;
-  top: 0;                     /* stick to top of the table wrapper */
-  z-index: 2;                 /* above cells */
-  background: #ebf3ff;        /* solid background under the sticky */
+  top: var(--nav-h);     /* was: 0 */
+  z-index: 2;
+  background: #ebf3ff;
 }
-
 /* make the wrapper the scroll container */
 .table-wrap{
   overflow: auto;             /* both axes if needed */
