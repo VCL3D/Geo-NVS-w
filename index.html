@@ -67,20 +67,15 @@
 
     table{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums}
     th, td{padding:10px 10px; border-bottom:1px solid #e8eef6; text-align:left}
-/* make header stick at the top of the wrapper, not 56px down */
-thead th{
-  position: sticky;
-  top: 0;
-  z-index: 1;          /* ensure it sits above rows */
-  background:#ebf3ff;  /* avoid translucency glitches */
-}
 
-/* make the wrapper only scroll horizontally so it doesn't become
-   a vertical scroll container (lets sticky behave predictably) */
-.table-wrap{
-  overflow-x: auto;
-  overflow-y: visible;
-}    tbody tr:hover{background:#f8fbff}
+    thead th{
+  position: sticky;
+  top: 56px;           /* keep the nav offset */
+  z-index: 1;
+  background:#ebf3ff;
+}
+    
+    tbody tr:hover{background:#f8fbff}
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
     .tag{display:inline-block; padding:4px 10px; border:1px solid #e0e8f2; background:#f5f9ff; color:#2a5b8a; border-radius:999px; font-size:12px}
 
@@ -316,10 +311,10 @@ thead th{
             <img src="energy_vs_psnr.png" alt="Energy vs. PSNR plot comparing methods"/>
             <figcaption><strong>Figure 2.</strong> Energy vs. quality for 300k iterations. Geo‑NVS‑w achieves high PSNR with substantially less training energy than NeRF‑W / Ha‑NeRF.</figcaption>
           </figure>
-
-<div class="table-wrap">
+<div style="overflow-x:auto; overflow-y:visible">
   <table aria-label="NVS quantitative results">…</table>
 </div>
+ 
   <thead>
     <tr>
       <th>Scene</th>
